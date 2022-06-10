@@ -44,38 +44,45 @@ function ChartTest() {
 					 },
 					 y: {
 						grid: {
-						   display: false
+						   display: true
 						}
 					 }
-				   
 		        },
+				plugins: {
+					legend: {
+						display: false,
+					}
+				}
 		    },
 		});
 
-		 return () => {
-	      myChart.destroy()
-	    }
+		//  return () => {
+	    //   myChart.destroy()
+	    // }
  }, [])
 
-  $('.myChartTest').css('height','100px !important')
+//   $('.myChartTest').css('height','100px !important')
 
 
 
 	return(
-		<div style={{'paddingTop':'20px','width':'100%'}}>
-			<div className="chart-container"  style={{'border': '0.3px gray', 'border-style': 'solid', 'width':'100%',}}>
+		<div style={{'paddingTop':'20px',}}>
+		 	<div className="chart-container"  style={{'border': '0.3px gray', 'border-style': 'solid', 'width':'100%',}}>
 			
 
 				<Heading size='md' textAlign='left' padding={'15px'}> Networth Trend</Heading>
 			
-				<canvas id="myChartTest" style={{'height':'100px !important'}} />
-				{/* <canvas id="myChartTest" /> */}
+				{/* <canvas id="myChartTest" style={{'height':'100px !important'}} /> */}
+				<section >
+				<canvas id="myChartTest" style={{'width':'800px','height':'290px', }}/>
+				</section>
+				
 
 				
 			
 		
 			
-			</div>
+			 </div>
 		</div>
 		
 		

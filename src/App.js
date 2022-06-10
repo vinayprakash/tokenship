@@ -15,16 +15,17 @@ import Tokenbal from './Tokenbal';
 
 function App() {
   return (
-    <Flex className="App" flexBasis={"fit-content"}>
+    <Flex className="App" flexbasis={"fit-content"}>
       <SidebarWithHeader />
-
       <Flex direction={'column'} width='85%'>
 
         <Headers />
         <Flex margin={'17px'}>
           <Flex direction={'column'} width='80%'>
             <DoughnutChart />
-             <Chart />
+
+            <Chart />
+
           </Flex>
           <Flex marginLeft='15px'>
             <Tokenbal />
