@@ -1,21 +1,15 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import {ethers} from 'ethers';
-import { FaSun,FaMoon } from 'react-icons/fa';
-//import {PhoneIcon} from '@chakra-ui/icon'
 import {
     Text,
-    Heading,
+    
     Button,
     Flex,
-    // ButtonGroup,
-    Stack,
-    VStack,
-    IconButton,
-    Container,Box,useColorMode,Image
+
+    Container,useColorMode
   } from '@chakra-ui/react';
-//   import ChevronDownIcon from '@chakra-ui/icon'
   import { SearchIcon,ChevronDownIcon,TriangleDownIcon } from '@chakra-ui/icons'
-import { concat } from 'ethers/lib/utils';
+
 
 
 const WalletCard = () => {
@@ -24,6 +18,9 @@ const WalletCard = () => {
     const [userBalance, setUserBalance] = useState(null);
     const [connButtonText, setConnButtonText] = useState('Connect to Wallet');
     const [chainId, setChainID] = useState(null);
+    useEffect(()=>{
+        connectWalletHandler()
+    })
     const CHAINIDS = {
         1: "Ethereum Main Network",
         3: "Ropsten Test Network",
@@ -71,24 +68,6 @@ const WalletCard = () => {
         <Flex direction={"column"} width={"100%"} padding={'0px'}>
 
 <Container maxW='2xl'padding={'0px'}>
-        {/* <Heading mb='8' 
-        fontWeight={'extrabold'} 
-        fontSize='4xl'
-        size='lg'
-        bgGradient='linear(to-r,orange.500, orange.300, blue.400)'
-        //bgColor={'green.500'} 
-        bgClip={'text'}> {"Connection to MetaMask Wallet"} </Heading> */}
-        {/* <div className='walletConnection'>
-        <Heading mb='2' 
-        fontWeight={'semibold'} 
-        size='sm'
-        bgColor='teal.400'
-        bgClip={'text'}> Chain Name: {getCurrentChainID(chainId)}
-        {connectWalletHandler()}</Heading>
-        </div> */}
-
-
-{/* <Box bg='green.200' w='100%' p={4} color='white'>  */}
 
 <Flex > 
 <img src='https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Fox.svg' width={"30px"}
@@ -98,25 +77,16 @@ height={"30px"}/>
     <Text fontSize={'xs'}> $ {userBalance} </Text>
 
 </div>
-<Button onClick={connectWalletHandler} 
+<Button onClick={()=>connectWalletHandler} 
         size='xs'
         height='15px'
         width='15px'
         margin={"5px"}
         
         rightIcon={<TriangleDownIcon color={"#cc703c"} />}>
-        {/* rightIcon={<ChevronDownIcon />}>  */}
-        {/* <Text fontSize='xs'> Click to connect </Text>  */}
 </Button>
 
 </Flex>
-{/* <Box> 
-<Text fontSize={'xs'}> {defaultAccount} </Text>
-</Box>
-<Box> 
-<Text fontSize={'xs'}> {userBalance} </Text>
-</Box> */}
-{/* </Box> */}
         
         {errorMessage}
              

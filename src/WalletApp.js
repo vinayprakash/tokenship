@@ -2,44 +2,29 @@ import React, { useState } from "react";
 import './App.css';
 import WalletCard from './WalletConnect';
 import TransferToken from './Transfer';
+import {ethers} from 'ethers';
 import {
-    //ChakraProvider,
     Box,
-    // Text,
-    // //Link,VStack,Code,Grid,theme,Container,
-    // Heading,
     Button,
     Text,
     Image,
-    // ButtonGroup,
-    // Stack,
-    VStack,
-    IconButton
-    //,Circle
+   
 } from '@chakra-ui/react';
 import {
     Flex,
     Menu,
     MenuButton,
     MenuList,Icon,
-    MenuItem, Grid, GridItem,
-    MenuItemOption,
-    MenuGroup,
-    MenuOptionGroup,
-    MenuDivider,
+    MenuItem, 
 } from '@chakra-ui/react';
 
-//import ChevronDownIcon from '@chakra-ui/icon';
 import { SearchIcon, ChevronDownIcon, TriangleDownIcon, ArrowDownIcon, ArrowUpIcon } from '@chakra-ui/icons'
-//import Image from 'Desktop/Crypto-BG-Pic.png'
-//import ErrorMessage from './ErrorMessage';
 import {
     Popover,
     PopoverTrigger,
     PopoverContent,
     PopoverHeader,
     PopoverBody,
-    PopoverFooter,
     PopoverArrow,
     PopoverCloseButton,
 } from "@chakra-ui/react";
@@ -105,6 +90,53 @@ const changeNetwork = async (networkName, setError) => {
     }
 };
 export default function App() {
+    const [errorMessage, setErrorMessage] = useState(null);
+    const [defaultAccount, setDefaultAccount] = useState(null);
+    const [userBalance, setUserBalance] = useState(null);
+    const [connButtonText, setConnButtonText] = useState('Connect to Wallet');
+    const [chainId, setChainID] = useState(null);
+    const CHAINIDS = {
+        1: "Ethereum Main Network",
+        3: "Ropsten Test Network",
+        4: "Rinkeby Test Network",
+        5: "Goerli Test Network",
+        42: "Kovan Test Network",
+        56: "BSC",
+        43114 : "Avalanche",
+        137 : "Polygon"
+      };
+    const connectWalletHandler = () => {
+        if (window.ethereum) {
+            window.ethereum.request({method : 'eth_requestAccounts'})
+            .then(result => {
+                accountChangedHandler(result[0]);
+            })
+        }
+        else {
+            setErrorMessage('Install MetaMask');
+        }
+    }
+    const accountChangedHandler = (newAccount) => {
+        setConnButtonText('Connected');
+        setDefaultAccount(newAccount.substring(38,42));
+        getUserBalance(newAccount);
+    }
+    const getUserBalance = (address) => {
+        window.ethereum.request({method : 'eth_getBalance', params : [address, 'latest']})
+        .then(balance => {
+            setUserBalance(ethers.utils.formatEther(balance).substring(0,6));
+        })
+         setChainID(window.ethereum.networkVersion);
+    }
+    
+    const getCurrentChainID = (chainId) => {
+        return CHAINIDS[chainId];
+    }
+    const chainChangedHandler = () => { 
+         window.location.reload();
+    }
+    window.ethereum.on('accountsChanged', accountChangedHandler);
+    window.ethereum.on('chainChanged', chainChangedHandler);
     const [error, setError] = useState(null);
     const handleNetworkSwitch = async (networkName) => {
         //setError();
@@ -129,7 +161,8 @@ export default function App() {
                                         <Image src='https://assets.coingecko.com/coins/images/279/thumb/ethereum.png?1595348880' alt='Dan Abramov' />
                                     </Box>
                                     </Flex>
-                                        <Text fontSize='x-small' width={"100%"}> Ethereum </Text>
+                                        <Text fontSize='x-small' width={"100%"}> {getCurrentChainID(chainId)}
+        {connectWalletHandler()} </Text>
                                     </MenuButton>
                                     <MenuList>
                                         <MenuItem onClick={() => handleNetworkSwitch("polygon")}>
@@ -151,7 +184,7 @@ export default function App() {
                                             <Text color={"white"}> Send </Text>
                                         </Button>
                                     </PopoverTrigger>
-                                    <PopoverContent zIndex={4}>
+                                    <PopoverContent zIndex={4} marginLeft='20px'>
                                         <PopoverArrow />
                                         <PopoverCloseButton />
                                         <PopoverHeader>Transfer ETH Payment!</PopoverHeader>
