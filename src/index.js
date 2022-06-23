@@ -4,6 +4,14 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {ChakraProvider} from '@chakra-ui/react'
+import Overview from './Overview';
+import Asset from './Asset';
+import ActivityData from './Activity'
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+} from "react-router-dom";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -12,7 +20,14 @@ root.render(
   // </React.StrictMode>
 
 <ChakraProvider>
-<App />
+<BrowserRouter>
+    <Routes>
+      <Route path="/" element={<Overview/>}/>
+      <Route  path="/overview"  element={<Overview />} />
+      <Route  path="/asset"  element={<Asset />} />
+      <Route  path="/activity"  element={<ActivityData />} />
+    </Routes>
+  </BrowserRouter>
 </ChakraProvider>
 );
 

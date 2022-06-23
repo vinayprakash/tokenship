@@ -1,6 +1,9 @@
 import React, { ReactNode } from 'react';
 import WalletApp from './WalletApp'
 import {
+  Link
+} from "react-router-dom";
+import {
   IconButton,
   Image,
   Box,
@@ -8,7 +11,7 @@ import {
   Flex,
   Icon,
   useColorModeValue,
-  Link,
+  
   Drawer,
   DrawerContent,
   Text,
@@ -33,13 +36,13 @@ interface LinkItemProps {
   icon: IconType;
 }
 const LinkItems = [
-  { name: 'Overview', icon: FiHome },
-  { name: 'My Assets', icon: FiBriefcase},
-  { name: 'Exchange', icon: FiBriefcase},
-  { name: 'Earn', icon: FiTrendingUp },
-  { name: 'NFT', icon: FiCompass },
-  { name: 'Activity', icon: FiStar },
-  { name: 'Settings', icon: FiSettings },
+  { name: 'Overview', icon: FiHome ,path:'/overview'},
+  { name: 'My Assets', icon: FiBriefcase,path:'/asset'},
+  { name: 'Exchange', icon: FiBriefcase,path:'/asset'},
+  { name: 'Earn', icon: FiTrendingUp ,path:'/asset'},
+  { name: 'NFT', icon: FiCompass ,path:'/asset'},
+  { name: 'Activity', icon: FiStar ,path:'/activity'},
+  { name: 'Settings', icon: FiSettings ,path:'/asset'},
 ];
 
 export default function SimpleSidebar({ children }: { children: ReactNode }) {
@@ -98,7 +101,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
   src='https://www.kindpng.com/picc/m/298-2985702_nissan-frontier-logo-vector-hd-png-download.png' alt='Dan Abramov' />
       <WalletApp />
       {LinkItems.map((link) => (
-        <NavItem key={link.name} icon={link.icon} fontSize="12px">
+        <NavItem key={link.name} icon={link.icon} path= {link.path} fontSize="12px">
           {link.name}
         </NavItem>
       ))}
@@ -109,10 +112,11 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 interface NavItemProps extends FlexProps {
   icon: IconType;
   children: ReactText;
+  path:string;
 }
-const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
+const NavItem = ({ icon,path, children, ...rest }: NavItemProps) => {
   return (
-    <Link href="#" style={{ textDecoration: 'none' }} _focus={{ boxShadow: 'none' }}>
+    <Link to={path} style={{ textDecoration: 'none' }}>
       <Flex
         align="center"
         p="3"

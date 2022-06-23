@@ -44,13 +44,13 @@ const Pagination = ({ postsPerPage, totalPosts, paginate, navigate, currentPage 
             </a>
           </Button>
           <Button size={'xs'} bgColor='white' key={'last'} >
-            <a onClick={() => paginate(pageNumbers.length-1)}>
+            {/* <a onClick={() => paginate(pageNumbers.length-1)}> */}
               <Flex border='1px' h='20px' w='20px' justifyContent={'center'}  
               bgColor={ pageNumbers.length-1 === currentPage ? '#d3814f': '#ffffff'} color= {currentPage === pageNumbers.length-1 ? '#ffffff': '#d3814f'}> <Text fontSize='x-small' marginTop={'2px'}
               > 
-              {pageNumbers[pageNumbers.length-1]}
+              {currentPage!==pageNumbers[pageNumbers.length-1] ? pageNumbers[pageNumbers.length-1]: '<'}
               </Text> </Flex> 
-            </a>
+            {/* </a> */}
           </Button>
         <Button size={'xs'} bgColor='white' key={'next'} className='page-item'>
             <a onClick={() =>  navigate(1)}>

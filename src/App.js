@@ -12,33 +12,26 @@ import Chart from './Chart';
 import DoughnutChart from './Doughchart';
 import Tokenbal from './Tokenbal';
 import TableData from './Asset';
+import ActivityData from './Activity';
+import {
+  Link
+} from "react-router-dom";
 
 
-function App() {
+function App({children}) {
   return (
     <Flex className="App" flexbasis={"fit-content"}>
       <SidebarWithHeader />
       <Flex direction={'column'} width='85%'>
 
         <Headers />
-        {/* <Flex margin={'17px'}>
-          <Flex direction={'column'} width='80%'>
-            <DoughnutChart />
-
-            <Chart />
-
-          </Flex>
-          <Flex marginLeft='15px'>
-            <Tokenbal />
-          </Flex>
-
-        </Flex> */}
-        <TableData />
+        {children}
 
       </Flex>
 
 
     </Flex>
+  
 
   )
 }

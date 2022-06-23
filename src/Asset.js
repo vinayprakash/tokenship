@@ -15,6 +15,7 @@ import { BsFillArrowDownRightCircleFill } from "react-icons/bs";
 //   IoBriefcase
 // } from 'react-icons/fi';
 import { FaBriefcase } from "react-icons/fa";
+import App from './App'
 
 
 
@@ -25,12 +26,12 @@ import {
   FiBriefcase
 } from 'react-icons/fi';
 
-function TableData() {
+function AssetData() {
   const [data, setData] = useState([])
   const [currentPosts, setCurrentPosts] = useState([]);
   const [sortkey, setSortkey] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [postsPerPage] = useState(10);
+  const [postsPerPage] = useState(2);
   const [CurrentWorth, setCurrentWorth] = useState();
   const [Qty, setQty] = useState();
 
@@ -38,11 +39,11 @@ function TableData() {
   const navigate = (direction) => {
     if (direction === 0 && currentPage !== 1) {
       setCurrentPage(currentPage - 1);
-    } else if (direction === 1 && currentPage !== Math.ceil(data.length / postsPerPage)-1) {
+    } else if (direction === 1 && currentPage !== Math.ceil(data.length / postsPerPage)) {
       setCurrentPage(currentPage + 1);
     }
   };
-  const URL = 'https://api.unmarshal.com/v1/bsc/address/0xfC43f5F9dd45258b3AFf31Bdbe6561D97e8B71de/assets?auth_key=DmBQDZcYPmaGes4KPq2G385JFVEGlDZz4IinQ4b4';
+  const URL = 'https://api.unmarshal.com/v1/bsc/address/0xCF7e7Ce3f221478ab25021572Bf157E4c487Ba4F/assets?auth_key=DmBQDZcYPmaGes4KPq2G385JFVEGlDZz4IinQ4b4';
 
   useEffect(() => {
     fetchData();
@@ -65,6 +66,7 @@ function TableData() {
         res.json())
 
       .then((response) => {
+        //   response = response.map(res => { return { ...res, balance: Number('100')}});
         setData(response);
         var CurrentWorth = [];
         response.map(item => {
@@ -103,9 +105,10 @@ function TableData() {
 
   }
   return (
+    <App>
     <Flex direction={'column'} w='100%'>
-      <Flex border={'1px'} borderColor='gray.200'
-        marginLeft='20%' paddingLeft={'2%'} marginTop='8%' w='450px'>
+      <Flex marginLeft={'2%'} border={'1px'} borderColor='gray.200'
+         paddingLeft={'2%'} marginTop='2%' w='450px'>
         <Flex direction={'column'} >
           <Flex margin={'10px 0px 10px 0px'}>
             <Icon color={'#008cf1'} w='25px' h='20px'
@@ -150,9 +153,9 @@ function TableData() {
         </Flex>
       </Flex>
       <Flex direction={'column'} w='100%'>
-        <Flex marginLeft={'20%'} border='1px' borderColor='gray.200' direction={'column'} paddingLeft='2%'
+        <Flex marginLeft={'2%'} border='1px' borderColor='gray.200' direction={'column'} paddingLeft='2%'
           marginTop={'2%'}>
-          <Flex marginTop='2%'>
+          <Flex marginTop='1%'>
             <Text fontFamily={'heading'} fontSize='larger' fontWeight={'bold'}>
               My Tokens
             </Text>
@@ -214,7 +217,7 @@ function TableData() {
             </Flex>
           </Flex>
         </Flex>
-        <Flex marginLeft={'20%'}>
+        <Flex marginLeft={'2%'}>
           <TableContainer w='100%'>
             <Table variant='simple' border={'1px'} borderColor='gray.200' w='100%'>
               <Thead bgColor={'gray.50'}>
@@ -275,7 +278,7 @@ function TableData() {
             </Table>
           </TableContainer>
         </Flex>
-        <Flex w='200px' marginLeft={'1240px'} marginTop='2%'>
+        <Flex w='200px' marginLeft={'950px'}>
           <Pagination
             postsPerPage={postsPerPage}
             totalPosts={data.length}
@@ -286,7 +289,8 @@ function TableData() {
         </Flex>
       </Flex>
     </Flex>
+    </App>
   );
 }
 
-export default TableData;
+export default AssetData;
