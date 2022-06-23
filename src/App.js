@@ -11,6 +11,7 @@ import SidebarWithHeader from './sidebarnew.tsx';
 import Chart from './Chart';
 import DoughnutChart from './Doughchart';
 import Tokenbal from './Tokenbal';
+import TableData from './Asset';
 
 
 function App() {
@@ -20,7 +21,7 @@ function App() {
       <Flex direction={'column'} width='85%'>
 
         <Headers />
-        <Flex margin={'17px'}>
+        {/* <Flex margin={'17px'}>
           <Flex direction={'column'} width='80%'>
             <DoughnutChart />
 
@@ -31,7 +32,8 @@ function App() {
             <Tokenbal />
           </Flex>
 
-        </Flex>
+        </Flex> */}
+        <TableData />
 
       </Flex>
 
