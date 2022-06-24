@@ -13,10 +13,7 @@ function ActivityData() {
     const [sortkey, setSortkey]=useState('');
     const [pagenum, setPageNum] = useState(1);
     const [barfilter, setbarfilter] = useState('all');
-    const [isActive, setIsActive] = useState(false);
     
-    const URL = `https://api.unmarshal.com/v2/bsc/address/0xCF7e7Ce3f221478ab25021572Bf157E4c487Ba4F/transactions?&page=${pagenum}&pageSize=7&auth_key=wKV8eggPIV465Yu6isLDR7HtpO66ysQt9iCpo40D`;
-   
     useEffect(() => {
     fetchData()
     },[]);
@@ -73,6 +70,8 @@ function ActivityData() {
     } 
   }
     const fetchData = () => {
+    var walletaddress = sessionStorage.getItem("walletaddress");
+    const URL = `https://api.unmarshal.com/v2/bsc/address/${walletaddress}/transactions?&page=${pagenum}&pageSize=7&auth_key=wKV8eggPIV465Yu6isLDR7HtpO66ysQt9iCpo40D`;
     fetch(URL)
     .then((res) => res.json())
     .then((response) => {
@@ -82,8 +81,8 @@ function ActivityData() {
     }
 
     const sort=()=>{
-      const sorteddata=filterData.sort(compare);
-      setFilterData([...sorteddata]);
+    const sorteddata=filterData.sort(compare);
+    setFilterData([...sorteddata]);
     }
 
     function compare( a, b ) {
