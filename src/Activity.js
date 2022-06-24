@@ -13,7 +13,7 @@ function ActivityData() {
     const [pagenum, setPageNum] = useState(1);
     const [barfilter, setbarfilter] = useState('all');
     
-    const URL = `https://api.unmarshal.com/v2/bsc/address/0xCF7e7Ce3f221478ab25021572Bf157E4c487Ba4F/transactions?&page=${pagenum}&pageSize=5&auth_key=wKV8eggPIV465Yu6isLDR7HtpO66ysQt9iCpo40D`;
+    const URL = `https://api.unmarshal.com/v2/bsc/address/0xCF7e7Ce3f221478ab25021572Bf157E4c487Ba4F/transactions?&page=${pagenum}&pageSize=7&auth_key=wKV8eggPIV465Yu6isLDR7HtpO66ysQt9iCpo40D`;
    
     useEffect(() => {
     fetchData()
