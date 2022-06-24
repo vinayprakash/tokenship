@@ -16,14 +16,15 @@ const Pagination = ({ postsPerPage, totalPosts, paginate, navigate, currentPage 
         <Flex margin={'15px'}>
       
       {/* <ul className='pagination'> */}
-      <Button size={'xs'} bgColor='white' key={'previous'} className='page-item'>
+      {pageNumbers.length > 2 && (<><Button size={'xs'} bgColor='white' key={'previous'} className='page-item'>
             <a onClick={() => navigate(0)}>
               <Flex border='1px' h='20px' w='20px' justifyContent={'center'}  
               bgColor='#ffffff' color='#d3814f'> <Text fontSize='x-small' marginTop={'2px'}
               > {'<'}</Text> </Flex>
             </a>
           </Button>
-        {pageNumbers.slice(currentPage>2 ? currentPage-1 : currentPage-1, currentPage < pageNumbers.length ? currentPage+1 : currentPage,).map(number => (
+      </>)}
+        {pageNumbers.map(number => (
           <Button size={'xs'} bgColor='white' key={number} >
             <a onClick={() => paginate(number)}>
               <Flex border='1px' h='20px' w='20px' justifyContent={'center'}  
@@ -34,7 +35,7 @@ const Pagination = ({ postsPerPage, totalPosts, paginate, navigate, currentPage 
             </a>
           </Button>
         ))}
-        <Button size={'xs'} bgColor='white' key={'dot'} >
+        {pageNumbers.length > 2 && (<><Button size={'xs'} bgColor='white' key={'dot'} >
             <a>
               <Flex border='1px' h='20px' w='20px' justifyContent={'center'}  
               bgColor='#ffffff' color= '#d3814f'> <Text fontSize='x-small' marginTop={'2px'}
@@ -58,7 +59,8 @@ const Pagination = ({ postsPerPage, totalPosts, paginate, navigate, currentPage 
               bgColor='#ffffff' color='#d3814f'> <Text fontSize='x-small' marginTop={'2px'}
               > {'>'} </Text> </Flex>
             </a>
-          </Button>
+          </Button></>)
+         } 
       {/* </ul> */}
     </Flex>
           

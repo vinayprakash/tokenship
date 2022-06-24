@@ -6,16 +6,23 @@ import { SearchIcon,ChevronDownIcon,QuestionIcon,TriangleDownIcon } from '@chakr
 
 
 function Headers() {
+  var headerMap={
+    overview:'Overview',
+    asset: 'My Assets',
+    activity : 'Activity'
+  }
+  var path = window.location.pathname;
+  var page = path.split("/").pop();
+  console.log( page );
+  const header = headerMap[page];
     return(
       <div className="App" flexBasis={"fit-content"} style={{'width':'100%'}}>
 <Box  width={"100%"} bgColor="gray.100">
   <Flex alignItems="center" alignContent={"start"} padding="14px" 
         flexbasis="fit-content" 
-        // border={"2px"} 
         justifyContent="space-between">
         <Box>
-          <Heading as='h3' size='lg'> Overview </Heading>
-              {/* <Text fontSize={"4xl"}> Overview </Text> */}
+          <Heading as='h3' size='lg'> {header} </Heading>
         </Box>
             <Flex>
               <Flex marginLeft={"400px"} border={"1px"} borderRadius={"5px"} h="27px" borderColor={'gray.200'}
@@ -51,9 +58,6 @@ function Headers() {
                 <QuestionIcon />
               </Icon>
               </Flex>
-              
-{/*         
-          </HStack> */}
        
         </Flex>
     

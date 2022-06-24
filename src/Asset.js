@@ -43,7 +43,8 @@ function AssetData() {
       setCurrentPage(currentPage + 1);
     }
   };
-  const URL = 'https://api.unmarshal.com/v1/bsc/address/0xCF7e7Ce3f221478ab25021572Bf157E4c487Ba4F/assets?auth_key=DmBQDZcYPmaGes4KPq2G385JFVEGlDZz4IinQ4b4';
+  var walletaddress = sessionStorage.getItem("walletaddress");
+  const URL = `https://api.unmarshal.com/v1/bsc/address/${walletaddress}/assets?auth_key=DmBQDZcYPmaGes4KPq2G385JFVEGlDZz4IinQ4b4`;
 
   useEffect(() => {
     fetchData();

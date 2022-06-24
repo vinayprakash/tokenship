@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode,useState } from 'react';
 import WalletApp from './WalletApp'
 import {
   Link
@@ -35,15 +35,7 @@ interface LinkItemProps {
   name: string;
   icon: IconType;
 }
-const LinkItems = [
-  { name: 'Overview', icon: FiHome ,path:'/overview'},
-  { name: 'My Assets', icon: FiBriefcase,path:'/asset'},
-  { name: 'Exchange', icon: FiBriefcase,path:'/asset'},
-  { name: 'Earn', icon: FiTrendingUp ,path:'/asset'},
-  { name: 'NFT', icon: FiCompass ,path:'/asset'},
-  { name: 'Activity', icon: FiStar ,path:'/activity'},
-  { name: 'Settings', icon: FiSettings ,path:'/asset'},
-];
+
 
 export default function SimpleSidebar({ children }: { children: ReactNode }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -79,29 +71,62 @@ interface SidebarProps extends BoxProps {
 }
 
 const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
+  const [LinkItems,setColor] = useState([
+    { name: 'Overview', icon: FiHome ,path:'/overview',color:'#f9f1eb',id:1},
+    { name: 'My Assets', icon: FiBriefcase,path:'/asset',color:'white',id:2},
+    { name: 'Exchange', icon: FiBriefcase,path:'/asset',color:'white',id:3},
+    { name: 'Earn', icon: FiTrendingUp ,path:'/asset',color:'white',id:4},
+    { name: 'NFT', icon: FiCompass ,path:'/asset',color:'white',id:5},
+    { name: 'Activity', icon: FiStar ,path:'/activity',color:'white',id:6},
+    { name: 'Settings', icon: FiSettings ,path:'/asset',color:'white',id:7},
+  ]);
+  
+  const handleClick = (id) => {
+    const newState = LinkItems.map(obj => {
+      // 👇️ if id equals 2, update country property
+      if (obj.id === id) {
+        return {...obj, color: '#f9f1eb'};
+      } 
+  
+      // 👇️ otherwise return object as is
+      return obj;
+    });
+    const newState2 = newState.map(obj2 => {
+      // 👇️ if id equals 2, update country property
+      if (obj2.id !== id && obj2.color === '#f9f1eb') {
+        return {...obj2, color: 'white'};
+      } 
+  
+      // 👇️ otherwise return object as is
+      return obj2;
+    });
+  
+    setColor(newState2);
+  };
   return (
     <Box
       bg={useColorModeValue('white', 'gray.900')}
       borderRight="2px"
-      borderRightColor='#836cff'
-  
-      //{useColorModeValue('gray.200', 'gray.700')}
-      //w={{ base: 'full', md: 60 }}
+      borderRightColor='gray.200'
       w='15%'
       pos="fixed"
       h="full"
       {...rest}
       >
+  <Flex justifyContent={'center'} marginBottom='3%'> 
     <Image 
   boxSize='100px'
   w="189px"
   h="59px"
   objectFit='cover'
   margin={"10px 20px"}
-  src='https://www.kindpng.com/picc/m/298-2985702_nissan-frontier-logo-vector-hd-png-download.png' alt='Dan Abramov' />
+  src='https://www.kindpng.com/picc/m/298-2985702_nissan-frontier-logo-vector-hd-png-download.png' alt='Dan Abramov' height={'20px'} width='100px'/>
+    </Flex>
+    <Flex>
       <WalletApp />
+    </Flex>
       {LinkItems.map((link) => (
-        <NavItem key={link.name} icon={link.icon} path= {link.path} fontSize="12px">
+        <NavItem key={link.name} icon={link.icon} path= {link.path} fontSize="12px" bgColor={link.color} onClick={()=>handleClick(link.id)}>
           {link.name}
         </NavItem>
       ))}
