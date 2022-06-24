@@ -128,8 +128,8 @@ function search(items) {
 }
   
   return (  
-        <div className="App" style={{'border': 'groove','width': '400px','width':'450px','maxHeight':'800px','overflowY':'scroll'}}>
-        <Box width = '450px' >
+        <div className="App" style={{'border': 'groove','width': '400px','width':'400px','maxHeight':'800px','overflowY':'scroll'}}>
+        <Box width = '400px' >
         <div style={{'padding':'30px','background':'#F8F9F9'}}>
         <Flex className="myTokens" >
         <Heading size='md'>My Tokens</Heading>
