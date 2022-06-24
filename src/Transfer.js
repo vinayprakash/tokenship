@@ -56,11 +56,7 @@ export default function TransferToken() {
   return (
 
 <Flex direction={"column"} width={"100%"} justifyContent={"flex-end"}>
-            {/* </Flex><Flex justifyContent={"flex-end"}> */}
       <Container maxW='sm' alignSelf={'flex-end'} marginTop={'10px'}>
-          {/* <Heading>
-          Transfer ETH Payment
-          </Heading> */}
           <GridItem colSpan={1}>
               <FormControl size={'smaller'}>
                   <FormLabel size={'smaller'}> 
@@ -81,7 +77,6 @@ export default function TransferToken() {
                     <Text color="white">Transfer </Text>
                 </Button>
             </GridItem>
-            {/* <TxList txs={txs} /> */}
       </Container>
       </Flex>
   );

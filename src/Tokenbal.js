@@ -128,8 +128,8 @@ function search(items) {
 }
   
   return (  
-        <div className="App" style={{'border': 'groove','width': '400px','width':'400px','maxHeight':'800px','overflowY':'scroll'}}>
-        <Box width = '400px' >
+        <div className="App" style={{'border': 'groove','width':'100%','maxHeight':'800px','overflowy':'scroll','marginLeft':'10px'}}>
+        <Box width = '100%' >
         <div style={{'padding':'30px','background':'#F8F9F9'}}>
         <Flex className="myTokens" >
         <Heading size='md'>My Tokens</Heading>
@@ -139,8 +139,8 @@ function search(items) {
           {balanceListist.length}
           </Heading>
         <Flex direction='column' textAlign='left'>
-        <Heading fontSize='22px' fontWeight='semibold' color='GrayText'>$77,485</Heading>
-        <Heading fontSize='12px' fontWeight='light'> 1.2% last 1 week</Heading>
+        <Heading fontSize='22px' fontWeight='semibold' color='GrayText'>$032</Heading>
+        <Heading fontSize='12px' fontWeight='light'> last week</Heading>
         </Flex>
         </Flex>
         </div>
@@ -156,7 +156,7 @@ function search(items) {
     filteredList.map(item=>(
         <div id="listdiv">
           <Flex  justifyContent={"space-between"} margin = '22px 15px'>
-            <Flex width={"40%"} overflow="hidden" whiteSpace={"nowrap"}>
+            <Flex width={"30%"} overflow="hidden" whiteSpace={"nowrap"}>
               <Image src="https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880" boxSize='30px'/>
               <Flex direction='column' alignItems='flex-start'> 
               <Heading id="itemName" size='sm' color='black' >{item.name}</Heading>
