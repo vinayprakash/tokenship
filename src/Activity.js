@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import './App.css';
 import {ethers} from 'ethers';
 import App from './App';
 import {Table, Thead, Tbody, Tfoot, Tr, Th, Td, TableContainer,Flex,Button,Link,Icon,Image, Stack,} from '@chakra-ui/react';
@@ -12,6 +13,7 @@ function ActivityData() {
     const [sortkey, setSortkey]=useState('');
     const [pagenum, setPageNum] = useState(1);
     const [barfilter, setbarfilter] = useState('all');
+    const [isActive, setIsActive] = useState(false);
     
     const URL = `https://api.unmarshal.com/v2/bsc/address/0xCF7e7Ce3f221478ab25021572Bf157E4c487Ba4F/transactions?&page=${pagenum}&pageSize=7&auth_key=wKV8eggPIV465Yu6isLDR7HtpO66ysQt9iCpo40D`;
    
@@ -20,16 +22,16 @@ function ActivityData() {
     },[]);
  
     useEffect(() => {
-        fetchData()
+    fetchData()
     },[pagenum]);
     
     useEffect(() => {
-        sort();
+    sort();
     }, [sortkey]);  
 
     useEffect(() =>{
-      cleanData();
-    },[data, barfilter])   
+    cleanData();
+    },[data, barfilter])
 
     const cleanData = () => {
       var arr = [];
@@ -55,30 +57,28 @@ function ActivityData() {
         quote : item?.type==='receive'? item?.received[0]?.quote : item?.sent[0]?.quote,
         link : `https://bscscan.com/tx/${item?.id}`,
         sentvalue : item.value,
-        // receivedvalue : Number(ethers.utils.formatEther(item.value)).toFixed(3),
         receivedvalue : item.received? item.received[0]?.value:"",
     }
     arr.push(obj);
     });
+   
     if(barfilter==='all')
-    {   
-    setFilterData(arr);
+    {  
+      setFilterData(arr);
     }
     else if(barfilter==='send'||'receive'||'swap') 
     {
     const items = arr.filter(item => item.event.toLowerCase()==barfilter);
     setFilterData(items);
-    }
-    
+    } 
   }
-      const fetchData = () => {
-        fetch(URL)
-        .then((res) =>
-        res.json())
-        .then((response) => {
-        const newData = response.transactions;    
-        setData([...data, ...newData]);
-        })
+    const fetchData = () => {
+    fetch(URL)
+    .then((res) => res.json())
+    .then((response) => {
+    const newData = response.transactions;    
+    setData([...data, ...newData]);
+    })
     }
 
     const sort=()=>{
@@ -106,13 +106,13 @@ function ActivityData() {
     <App>
     <Flex marginTop={'30px'} width='99%' > 
     <Flex width='100%' justifyContent='flex-end'>
-    <Flex direction={'column'} width='100%' border='2px' borderColor={'#e7e9ed'} marginLeft='2%'>
+    <Flex direction={'column'} width='100%' border='2px' borderColor='#e7e9ed' marginLeft='2%'>
         <Flex direction='column' >
         <Stack direction='row' spacing={4} align='center' paddingLeft='3px' height='90px'>
-        <Button textColor={'black'}  fontWeight='normal' _hover={{ bg: "#ee7a30d6" }} autoFocus='yes' bottom='4px' variant='outline' rounded='full' onClick={() => setbarfilter('all')}>All transactions</Button>
-        <Button  textColor={'black'}  fontWeight='normal' _hover={{ bg: "#ee7a30d6" }} bottom='4px' variant='outline' rounded='full' onClick={() => setbarfilter('send')}>Sent</Button>
-        <Button textColor={'black'}  fontWeight='normal' _hover={{ bg: "#ee7a30d6" }} bottom='4px' variant='outline' rounded='full' onClick={() => setbarfilter('receive')}>Received</Button>
-        <Button textColor={'black'}  fontWeight='normal' _hover={{ bg: "#ee7a30d6" }} bottom='4px' variant='outline' rounded='full' onClick={() => setbarfilter('swap')}>Swap</Button>
+        <Button className={barfilter === "all" ? "active" : ''} textColor={'black'}  fontWeight='normal' _hover={{ bg: "#ee7a30d6" }} autoFocus='yes' bottom='4px' variant='outline' rounded='full' onClick={() => {setbarfilter('all')}}>All transactions</Button>
+        <Button className={barfilter === "send" ? "active" : ''} textColor={'black'}  fontWeight='normal' _hover={{ bg: "#ee7a30d6" }} bottom='4px' variant='outline' rounded='full' onClick={() => {setbarfilter('send');}}>Sent</Button>
+        <Button className={barfilter === "receive" ? "active" : ''} textColor={'black'}  fontWeight='normal' _hover={{ bg: "#ee7a30d6" }} bottom='4px' variant='outline' rounded='full' onClick={() => {setbarfilter('receive')}}>Received</Button>
+        <Button className={barfilter === "swap" ? "active" : ''} textColor={'black'}  fontWeight='normal' _hover={{ bg: "#ee7a30d6" }} bottom='4px' variant='outline' rounded='full' onClick={() => setbarfilter('swap')}>Swap</Button>
         </Stack> 
 
     <TableContainer width='100%' border='0.5px black' borderStyle='groove' rounded='md'>
@@ -139,11 +139,11 @@ function ActivityData() {
 
         {
         item.event === 'receive'?
-        <Td><Icon as={ArrowDownIcon} rounded='md' border='1px' padding='1px' borderColor='gray.500' color="red.500"  width= '1.2em'height= '1.2em'/> Received</Td> 
+        <Td><Icon as={ArrowDownIcon} rounded='md' border='1px' padding='1px' borderColor='#e7e9ed' color="red.500"  width= '1.2em'height= '1.2em'/> Received</Td> 
         : item.event === 'send'?
-        <Td><Icon as={ArrowUpIcon} rounded='md' border='1px' padding='1px'borderColor='gray.500' color="red.500" width= '1.2em'height= '1.2em'/> Sent</Td> 
+        <Td><Icon as={ArrowUpIcon} rounded='md' border='1px' padding='1px'borderColor='#e7e9ed' color="red.500" width= '1.2em'height= '1.2em'/> Sent</Td> 
         : item.event === 'swap'?
-        <Td><Icon as={RepeatIcon} rounded='md' border='1px' padding='1px' borderColor='gray.500' color="red.500" width= '1.2em'height= '1.2em'/> swap</Td>: <Td>${item.event}</Td>
+        <Td><Icon as={RepeatIcon} rounded='md' border='1px' padding='1px' borderColor='#e7e9ed' color="red.500" width= '1.2em'height= '1.2em'/> swap</Td>: <Td>${item.event}</Td>
        }
 
        {
@@ -159,7 +159,7 @@ function ActivityData() {
           <Flex marginLeft='40px'>
           <Flex direction='column'>
           <Flex fontSize='15px' color='gray.400' fontWeight='normal'>Tokens</Flex>             
-          <Flex>{Number(ethers.utils.formatEther(item.receivedvalue)).toFixed(4)}<Image src={item.recvdtoken_logo} boxSize='20px'marginRight='6px' marginTop='4px'/>{item.receivedToken}</Flex>
+          <Flex><Flex marginRight='10px'>{Number(ethers.utils.formatEther(item.receivedvalue)).toFixed(4)}</Flex><Image src={item.recvdtoken_logo} boxSize='20px'marginRight='5px' />{item.receivedToken}</Flex>
           </Flex>
           </Flex>
           </Flex>        
@@ -175,7 +175,7 @@ function ActivityData() {
         <Flex marginLeft='30px'>
         <Flex direction='column'> 
         <Flex fontSize='15px' color='gray.400' fontWeight='normal'>Tokens</Flex>  
-        <Flex>{Number(ethers.utils.formatEther(item.sentvalue)).toFixed(8)}<Image src={item.senttoken_logo} boxSize='20px'marginRight='6px' marginTop='4px'/>{item.sentToken}</Flex>
+        <Flex> <Flex marginRight='5px'>{Number(ethers.utils.formatEther(item.sentvalue)).toFixed(8)}</Flex><Image src={item.senttoken_logo} boxSize='20px'marginRight='6px'/>{item.sentToken}</Flex>
         </Flex>
         </Flex> 
         </Flex>
@@ -190,7 +190,7 @@ function ActivityData() {
         </Flex>
         <Flex  direction={'column'}marginLeft='1px'>
         <Flex marginLeft='1px' fontSize='15px' color='gray.400' fontWeight='normal'>To</Flex> 
-        <Flex paddingLeft='1px'>{Number(ethers.utils.formatEther(item.receivedvalue)).toFixed(2)}<Image marginRight='5px' src={item.recvdtoken_logo} boxSize='20px'marginLeft='20px'/> {item.receivedToken}</Flex>   
+        <Flex paddingLeft='1px'>{Number(ethers.utils.formatEther(item.receivedvalue)).toFixed(2)}<Image marginRight='5px' src={item.recvdtoken_logo} boxSize='20px'marginLeft='5px'/> {item.receivedToken}</Flex>   
         </Flex>
         </Flex>
         </Td> :<Td></Td>
@@ -203,13 +203,11 @@ function ActivityData() {
         </Tbody>
         </Table>
         </TableContainer>
-    
         </Flex><Button onClick={incrementpagenum}> Load More </Button></Flex>
         </Flex>
         </Flex>
         </App>
         );
-
 }
  
 export default ActivityData;
