@@ -15,8 +15,8 @@ return (
     <Chart />
     </Flex>
     
-    <Flex width='30%'marginTop='2%'>
-        <Flex width={'100%'}>
+    <Flex width='30%' marginTop='2%'>
+        <Flex width={'100%'} height='100%'>
         <Tokenbal />
         </Flex>
     </Flex>
