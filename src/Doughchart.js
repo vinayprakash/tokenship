@@ -67,8 +67,7 @@ function DoughnutChart() {
 
 
 	return (
-		
-		<div style={{ 'border': '0.5px gray', 'border-style': 'solid', 'width': '100%' }}>
+		<div style={{ 'border': '0.5px gray', 'border-style': 'solid', 'width': '100%' ,'height':'330px'}}>
 			<div className='networth'><Heading size='md' textAlign='left' padding={'15px'}> Networth</Heading></div>
 			<div className="chart-container" style={{ 'paddingTop': '02px', 'display': 'flex', 'alignItems': 'center', 'marginTop': '-20px' }}>
 				<div style={{ 'width': '360px', 'height': '250px', 'marginTop': '45px', 'marginLeft': '-25px' }}>

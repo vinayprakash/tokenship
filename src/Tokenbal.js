@@ -1,134 +1,104 @@
 import React from "react";
-import Web3 from "web3/dist/web3.min";
+import { ethers } from 'ethers';
 import { useState, useEffect } from "react";
-import {Box, Button, Flex, Heading, Input, Icon, Image} from '@chakra-ui/react';
-import {SearchIcon} from "@chakra-ui/icons"
+import {Box, Button, Flex, Heading, Icon, Image, Text} from '@chakra-ui/react';
+import { SearchIcon} from '@chakra-ui/icons'
 
-// const provider = "https://mainnet.infura.io/v3/27af3e6f4d9d45e6ac1a6bf497a6e278";
-const provider = "https://mainnet.infura.io/v3/70f77bb93e204c7e96a4a3df80767689";
-// const provider ="https://mainnet.infura.io/v3/b373051775cd4c65a9fb9eeb34e16795";
-
-const Web3Client = new Web3(new Web3.providers.HttpProvider(provider));
-const minABI = [
-  {
-    constant: true,
-    inputs: [{ name: "_owner", type: "address" }],
-    name: "balanceOf",
-    outputs: [{ name: "balance", type: "uint256" }],
-    type: "function",
-  },
-];
 function TokBal() {
   const [view,setView] = useState(false);
   const [viewAll, setViewAll] = useState('View All');
-  const [amount, setAmount] = useState([]);
-  const [amnt, setAmnt] = useState([]);
-  
-  const [addresses,setAddress]= useState([]);
-  const [balanceListist,setBalanceList]= useState([]);
+  const [data, setData] = useState([])
   const [filteredList,setFilteredList]= useState([]);
-  const [defaultAccount, setDefaultAccount] = useState(null);
-  const [userBalance, setUserBalance] = useState(null);
+  const [CurrentWorth, setCurrentWorth] = useState();
+  const [Qty, setQty] = useState();
+  const [accountAddress, setAccountAddress] = useState();
+  const [url, setUrl] = useState("");
   // const walAddress = "0xfC43f5F9dd45258b3AFf31Bdbe6561D97e8B71de"; // ethereum data address
+// const walletaddress = "0xfC43f5F9dd45258b3AFf31Bdbe6561D97e8B71de";
+// const chains =[ "ethereum", "bsc", "matic","celo", "avalanche" ,"xinfin", "zilliqa", "solana", "fantom", "bsc-testnet","matic-testnet","rinkeby-testnet"]
 
-  var walAddress ;
-  const [q, setQ] = useState("");
+var chainName = "bsc"
+const [q, setQ] = useState("");
 
-  const [searchParam] = useState(["capital", "name"]);
-
-        // useEffect(() => {
-        //     // our fetch codes
-        // }, []);
-
- 
-      const connectWalletHandler = () => {
-        if (window.ethereum) {
-            window.ethereum.request({method : 'eth_requestAccounts'})
-            .then(result => {
-                accountChangedHandler(result[0]);
-            })
-        }
-        else {
-            console.log("Install metamask")
-        }
-      }
-      const accountChangedHandler = (newAccount) => {
-        setDefaultAccount(newAccount);  
-}
-  
-useEffect(() => {
-  const getAnswer= async () => {
-      const res = await fetch("https://wispy-bird-88a7.uniswap.workers.dev/?url=http://tokenlist.zerion.eth.link");
-      const json = await res.json();
-      let addresses = json.tokens.map((token) => (
-        {address:token.address,name:token.name,decimal:token.decimals}
-        ));
-     setAddress(addresses)
-  };
-  getAnswer();
-  },[])
-
-  const getContractData = async (address) => {
-    const contract = new Web3Client.eth.Contract(minABI, address.address);
-    const balance = await contract.methods.balanceOf(walAddress).call();
-    const format = Web3Client.utils.fromWei(balance);
-    const amount = parseFloat(format).toFixed(2)
-    return {'bal':amount,'name':address.name,'decimal':address.decimals};
-  }
-  useEffect(()=>{
-    const getData = () => {
-        addresses.forEach((address) => {
-         getContractData(address).then(respose => {
-            Number(respose.bal) > 0 && 
-            setBalanceList(prev =>([
-            ...prev,
-            {...respose}
-            ]))
-        });
-        });
+  useEffect(() => {
+    const timer = setTimeout(() => {
+    var walletaddress = sessionStorage.getItem("walletaddress");
+    setAccountAddress(walletaddress);
+    let url = "";
+    if(walletaddress){
+      url = `https://api.unmarshal.com/v1/bsc/address/${walletaddress}/assets?auth_key=DmBQDZcYPmaGes4KPq2G385JFVEGlDZz4IinQ4b4`;
+      setUrl(url);
     }
-    addresses.length > 0 && getData();    
-  },[addresses])
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if(url){
+      fetchData();
+    }
+  }, [url]);
+
+  const fetchData =  () => {
+    console.log(url);
+       fetch(url)
+      .then((res) =>
+        res.json())
+      .then((response) => {
+        //console.log(response);
+        setData(response);
+        //console.log(response);
+        var CurrentWorth = [];
+        response?.map(item => {
+          const num = `${(item.quote_rate * ethers.utils.formatEther(item.balance))}`
+          CurrentWorth.push(Number(num))
+          var result = CurrentWorth.reduce((x, y) => x + y);
+          setCurrentWorth(result);
+        })
+        const Quantity = CurrentWorth.length
+        setQty(Quantity)
+      })
+     }
 
   useEffect(()=>{
     if(view){
       setViewAll("View Less");
-      setFilteredList(balanceListist)
+     setFilteredList(data)
     } else {
       setViewAll("View More");
-      setFilteredList(balanceListist.slice(0,8))
+      setFilteredList(data.slice(0,6))
     }
-  },[view]); 
+    },[view]); 
 
   const sliceBalance=()=>{
     setView(!view)      
   }
 
-  useEffect(() =>{
-      connectWalletHandler();
-  })
-
       useEffect(()=>{
-        setFilteredList(balanceListist.slice(0,8));
-      },[balanceListist])
- 
-  window.ethereum.on('accountsChanged', accountChangedHandler);
-
+        setFilteredList(data.slice(0,6));
+      },[data])
   
 function search(items) {
     if(q==="")
     {
-      setFilteredList(balanceListist.slice(0,8));
+      setFilteredList(data.slice(0,6));
     }
     else{
-      const list = balanceListist.filter(item => item.name.toLowerCase().indexOf(q.toLowerCase()) > -1 );
+      const list = data.filter(item => item.contract_name.toLowerCase().indexOf(q.toLowerCase()) > -1 );
       setFilteredList(list);
     }
     
 }
+function percentage(quoteRate, quoteRate24H) {
+
+    if (quoteRate === 0 || quoteRate24H === 0) {
+      return 0;
+    }
+    return (quoteRate24H / quoteRate * 100).toFixed(2);
+  }
   
-  return (  
-        <div className="App" style={{'border': 'groove','width':'100%','maxHeight':'800px','overflowy':'scroll','marginLeft':'10px'}}>
+  return ( 
+        <div className="App" style={{'border': 'groove','width':'100%','marginLeft':'10px'}}>
         <Box width = '100%' >
         <div style={{'padding':'30px','background':'#F8F9F9'}}>
         <Flex className="myTokens" >
@@ -136,47 +106,54 @@ function search(items) {
         </Flex>
         <Flex className="noOfTokens" justifyContent='space-between' >
         <Heading fontSize='40px'>
-          {balanceListist.length}
+          {data.length}
           </Heading>
         <Flex direction='column' textAlign='left'>
-        <Heading fontSize='22px' fontWeight='semibold' color='GrayText'>$032</Heading>
-        <Heading fontSize='12px' fontWeight='light'> last week</Heading>
+        <Heading fontSize='22px' fontWeight='semibold' color='GrayText'>${CurrentWorth?.toFixed(2)}</Heading>
+        <Heading fontSize='12px' fontWeight='light'> current value</Heading>
         </Flex>
         </Flex>
         </div>
 
       <div>
-      <div style={{'padding':'20px', 'position':'relative'}}>
+      <div style={{'padding':'15px', 'position':'relative'}}>
       <input type="search" name="search-form" id="search-form" className="search-input" placeholder="Search for..." 
-      onChange={(e) => setQ(e.target.value)}  style={{'border':'1px solid #b6adad', 'textAlign' : 'left', 'width': '102%', 'border-radius': '4px', 'padding' :'5px'}} ></input>
+      onChange={(e) => setQ(e.target.value)}  style={{'border':'1px solid #b6adad', 'textAlign' : 'left', 'width': '102%', 'border-radius': '4px', 'padding' :'10px'}} ></input>
       <Icon as={SearchIcon} position='absolute' top ='31px' right='42px' onClick = {search}/>
     </div>
-      </div>   
+      </div>
+      <Flex direction={'column'} overflowY='scroll' maxHeight='480px' >
        {    
     filteredList.map(item=>(
         <div id="listdiv">
-          <Flex  justifyContent={"space-between"} margin = '22px 15px'>
-            <Flex width={"30%"} overflow="hidden" whiteSpace={"nowrap"}>
-              <Image src="https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880" boxSize='30px'/>
-              <Flex direction='column' alignItems='flex-start'> 
-              <Heading id="itemName" size='sm' color='black' >{item.name}</Heading>
+          <Flex justifyContent={"space-between"} margin = '13px 15px' maxHeight={'700px'}>
+            <Flex width={"60%"} overflow="hidden" whiteSpace={"nowrap"} > 
+              <Image src={item.logo_url} boxSize='20px'/>
+              <Flex direction='column' alignItems='flex-start' marginLeft='10px'> 
+              <Heading id="itemName" size='sm' color='black' >{item.contract_name}</Heading>
               <div>
-                <Heading fontSize='10px' fontWeight='light'>Qty: {item.bal}</Heading>
+                <Heading fontSize='13px' fontWeight='light'>Qty: {Number(ethers.utils.formatEther(item.balance)).toFixed(4)}</Heading>
               </div>
               <div>
-                <Heading fontSize='x-small' fontWeight='light' >Ethereum</Heading>
+                <Heading fontSize='13px' fontWeight='light' >{chainName}</Heading>
               </div>
               </Flex>
            </Flex>
-          <Flex style={{'justifyContent':'right'}} overflow={"hidden"}><Heading size='xs' fontWeight='medium' >${item.bal}</Heading></Flex>
+          <Flex style={{'justifyContent':'right'}} overflow={"hidden"} flexDirection ='column'> ${item.quote_rate?.toFixed(2)}
+            <Heading size='xs' fontWeight='medium' ><Text display={'flex'} fontSize='xs' paddingLeft={'15px'} alignItems='center'> {Number(item.quote_rate_24h) < 0 }
+            {Number(item.quote_rate_24h) < 0 ? <Text color={'red'}> {percentage(item.quote_rate, Number(item.quote_rate_24h))}%  </Text> : <Text color={'green'}> {percentage(item.quote_rate, Number(item.quote_rate_24h))}%</Text>} </Text></Heading>
           </Flex>
-        </div>
+          </Flex>
+          </div>
+          
+       
       ))}
-      <div className="button">
-      {filteredList.length >= 8 ?
-      <Button colorScheme='cyan' variant='outline' id="submit" onClick={sliceBalance}>
+       </Flex>
+      <Flex left={'0'} right='0' margin={'3px'}>
+      {data.length >= 7 ?
+      <Button color='#cc703c' variant='outline' borderColor='#cc703c' id="submit" onClick={sliceBalance} width='100%'>
         {viewAll}</Button> : null}
-      </div>
+      </Flex>
       </Box>
       </div>
 )}

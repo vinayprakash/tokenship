@@ -13,10 +13,10 @@ function ActivityData() {
     const [sortkey, setSortkey]=useState('');
     const [pagenum, setPageNum] = useState(1);
     const [barfilter, setbarfilter] = useState('all');
-    const [isActive, setIsActive] = useState(false);
     
-    const URL = `https://api.unmarshal.com/v2/bsc/address/0xCF7e7Ce3f221478ab25021572Bf157E4c487Ba4F/transactions?&page=${pagenum}&pageSize=7&auth_key=wKV8eggPIV465Yu6isLDR7HtpO66ysQt9iCpo40D`;
-   
+     var walletaddress = sessionStorage.getItem("walletaddress");
+    const URL = `https://api.unmarshal.com/v2/bsc/address/${walletaddress}/transactions?&page=${pagenum}&pageSize=5&auth_key=wKV8eggPIV465Yu6isLDR7HtpO66ysQt9iCpo40D`;
+ 
     useEffect(() => {
     fetchData()
     },[]);
@@ -54,7 +54,7 @@ function ActivityData() {
         senttoken_logo: item.sent? item.sent[0]?.logo_url:"",
         // receivedQuote: item.received?item.received[0]?.quote?item.received[0]?.quote:"":"",
         // sentQuote: item.sent?item.sent[0]?.quote?item.sent[0]?.quote:"":"",
-        quote : item?.type==='receive'? item?.received[0]?.quote : item?.sent[0]?.quote,
+        quote : item?.type==='receive'?   item?.received[0]?.quote  :item?.type==='send'?item.sent[0]?.quote :item?.type==='swap'?item.sent[0]?.quote : '',
         link : `https://bscscan.com/tx/${item?.id}`,
         sentvalue : item.value,
         receivedvalue : item.received? item.received[0]?.value:"",
@@ -73,7 +73,7 @@ function ActivityData() {
     } 
   }
     const fetchData = () => {
-    fetch(URL)
+      fetch(URL)
     .then((res) => res.json())
     .then((response) => {
     const newData = response.transactions;    
@@ -82,8 +82,8 @@ function ActivityData() {
     }
 
     const sort=()=>{
-      const sorteddata=filterData.sort(compare);
-      setFilterData([...sorteddata]);
+    const sorteddata=filterData.sort(compare);
+    setFilterData([...sorteddata]);
     }
 
     function compare( a, b ) {
@@ -159,7 +159,7 @@ function ActivityData() {
           <Flex marginLeft='40px'>
           <Flex direction='column'>
           <Flex fontSize='15px' color='gray.400' fontWeight='normal'>Tokens</Flex>             
-          <Flex><Flex marginRight='10px'>{Number(ethers.utils.formatEther(item.receivedvalue)).toFixed(4)}</Flex><Image src={item.recvdtoken_logo} boxSize='20px'marginRight='5px' />{item.receivedToken}</Flex>
+          <Flex><Flex marginRight='10px'>{Number(ethers.utils.formatEther(item.receivedvalue)).toFixed(6)}</Flex><Image src={item.recvdtoken_logo} boxSize='20px'marginRight='5px' />{item.receivedToken}</Flex>
           </Flex>
           </Flex>
           </Flex>        
@@ -175,7 +175,9 @@ function ActivityData() {
         <Flex marginLeft='30px'>
         <Flex direction='column'> 
         <Flex fontSize='15px' color='gray.400' fontWeight='normal'>Tokens</Flex>  
-        <Flex> <Flex marginRight='5px'>{Number(ethers.utils.formatEther(item.sentvalue)).toFixed(8)}</Flex><Image src={item.senttoken_logo} boxSize='20px'marginRight='6px'/>{item.sentToken}</Flex>
+        <Flex> <Flex marginRight='5px'>{Number(ethers.utils.formatEther(item.sentvalue)).toFixed(8)}</Flex>
+        
+        <Image src={item.senttoken_logo} boxSize='20px'marginRight='6px'/>{item.sentToken}</Flex>
         </Flex>
         </Flex> 
         </Flex>
@@ -190,7 +192,8 @@ function ActivityData() {
         </Flex>
         <Flex  direction={'column'}marginLeft='1px'>
         <Flex marginLeft='1px' fontSize='15px' color='gray.400' fontWeight='normal'>To</Flex> 
-        <Flex paddingLeft='1px'>{Number(ethers.utils.formatEther(item.receivedvalue)).toFixed(2)}<Image marginRight='5px' src={item.recvdtoken_logo} boxSize='20px'marginLeft='5px'/> {item.receivedToken}</Flex>   
+        <Flex paddingLeft='1px'>{Number(ethers.utils.formatEther(item.receivedvalue)).toFixed(2)}
+        <Image marginRight='5px' src={item.recvdtoken_logo} boxSize='20px'marginLeft='5px'/> {item.receivedToken?item.receivedToken:""}</Flex>   
         </Flex>
         </Flex>
         </Td> :<Td></Td>
