@@ -31,9 +31,12 @@ function AssetData() {
   const [currentPosts, setCurrentPosts] = useState([]);
   const [sortkey, setSortkey] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [postsPerPage] = useState(2);
+  const [postsPerPage] = useState(1);
   const [CurrentWorth, setCurrentWorth] = useState();
   const [Qty, setQty] = useState();
+  const [URL,setUrl] = useState();
+  const [chainnamenew,setChainName]=useState();
+  const [walletaddressnew,setWalletAddress]=useState();
 
   const paginate = pageNumber => { setCurrentPage(pageNumber) };
   const navigate = (direction) => {
@@ -43,16 +46,37 @@ function AssetData() {
       setCurrentPage(currentPage + 1);
     }
   };
-  var walletaddress = sessionStorage.getItem("walletaddress");
-  const URL = `https://api.unmarshal.com/v1/bsc/address/${walletaddress}/assets?auth_key=DmBQDZcYPmaGes4KPq2G385JFVEGlDZz4IinQ4b4`;
 
   useEffect(() => {
-    fetchData();
+    const timer = setTimeout(() => {
+    var walletaddress = sessionStorage.getItem("walletaddress");
+    var chainname = sessionStorage.getItem("activeChain");
+    setChainName(chainname);
+    setWalletAddress(walletaddress);
+    let URL = "";
+    if(walletaddress && chainname){
+      URL = `https://api.unmarshal.com/v1/${chainname}/address/${walletaddress}/assets?auth_key=wKV8eggPIV465Yu6isLDR7HtpO66ysQt9iCpo40D`;
+      setUrl(URL);
+    }
+    }, 1000);
+    return () => clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    let URL = "";
+      if(walletaddressnew && chainnamenew){
+        URL = `https://api.unmarshal.com/v1/${chainnamenew}/address/${walletaddressnew}/assets?auth_key=wKV8eggPIV465Yu6isLDR7HtpO66ysQt9iCpo40D`;
+        setUrl(URL);
+      }
+  }, [chainnamenew, walletaddressnew]);
 
   useEffect(() => {
     sort();
   }, [sortkey]);
+
+  useEffect(() => {
+    fetchData();
+  }, [URL]);
 
   useEffect(() => {
     const indexOfLastPost = currentPage * postsPerPage;
@@ -60,17 +84,15 @@ function AssetData() {
     setCurrentPosts(data.slice(indexOfFirstPost, indexOfLastPost));
   }, [data, currentPage]);
 
-
   const fetchData = () => {
     fetch(URL)
       .then((res) =>
         res.json())
-
       .then((response) => {
-        //   response = response.map(res => { return { ...res, balance: Number('100')}});
         setData(response);
         var CurrentWorth = [];
         response.map(item => {
+          console.log(item);
           const num = `${(item.quote_rate * ethers.utils.formatEther(item.balance))}`
           CurrentWorth.push(Number(num))
           var result = CurrentWorth.reduce((x, y) => x + y);
@@ -78,10 +100,10 @@ function AssetData() {
         })
         const Quantity = CurrentWorth.length
         setQty(Quantity)
-        //console.log(Quantity)
       })
-
+      
   }
+ 
   const sort = () => {
     const sorteddata = currentPosts.sort(compare);
     setCurrentPosts([...sorteddata]);

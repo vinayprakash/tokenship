@@ -101,9 +101,9 @@ export default function App() {
         4: "Rinkeby Test Network",
         5: "Goerli Test Network",
         42: "Kovan Test Network",
-        56: "BSC",
-        43114: "Avalanche",
-        137: "Polygon"
+        56: "bsc",
+        43114: "avalanche",
+        137: "matic"
     };
     const connectWalletHandler = () => {
         if (window.ethereum) {
@@ -130,7 +130,13 @@ export default function App() {
     }
 
     const getCurrentChainID = (chainId) => {
+        let chain = CHAINIDS[chainId];
+       if(chain) {
+        const currentChain = chain.toLowerCase();
+        sessionStorage.setItem("activeChain", currentChain);
+        }
         return CHAINIDS[chainId];
+
     }
     const chainChangedHandler = () => {
         window.location.reload();
@@ -163,7 +169,8 @@ export default function App() {
                         </Flex>
                         <Flex>
                         <Text fontSize='x-small' width={"100%"}> {getCurrentChainID(chainId)}
-                            {connectWalletHandler()} </Text>
+                            {connectWalletHandler()}
+                            </Text>
                         </Flex>
                     </MenuButton>
                     <MenuList>
@@ -182,7 +189,7 @@ export default function App() {
                             bgColor={"#cc703c"}
                             position='relative'
                             leftIcon={<ArrowUpIcon position='absolute' left='8px' bottom='6px' color={'#cc703c'} />} >
-                            <CircleIcon boxSize={4} color='white' margin='0px 10px 0px -10px' />
+                            <CircleIcon boxSize={4} color='white' margin='0px 3px 0px -10px' />
                             <Text color={"white"}> Send </Text>
                         </Button>
                     </PopoverTrigger>
@@ -193,11 +200,11 @@ export default function App() {
                         <PopoverBody> <TransferToken /></PopoverBody>
                     </PopoverContent>
                 </Popover>
-                <Button size="xs" borderColor={'#cc703c'}
+                <Button size='xs' borderColor={'#cc703c'}
                     bgColor={"white"}
                     variant={"outline"}
                     leftIcon={<ArrowDownIcon position='absolute' left='8px' bottom='6px' color={'white'} />} >
-                    <CircleIcon boxSize={4} color='#cc703c' margin='0px 10px 0px -10px' />
+                    <CircleIcon boxSize={4} color='#cc703c' margin='0px 3px 0px -10px' />
                     <Text color={"#cc703c"}> Receive </Text>
                 </Button>
 

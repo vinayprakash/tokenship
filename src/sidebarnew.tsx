@@ -1,4 +1,4 @@
-import React, { ReactNode,useState } from 'react';
+import React, { ReactNode,useEffect,useState } from 'react';
 import WalletApp from './WalletApp'
 import {
   Link
@@ -17,7 +17,7 @@ import {
   Text,
   useDisclosure,
   BoxProps,
-  FlexProps,Grid,GridItem,Menu,MenuButton,MenuItem,MenuList,Button,
+  FlexProps,Grid,GridItem,Menu,MenuButton,MenuItem,MenuList,Button, color,
 } from '@chakra-ui/react';
 import {
   FiHome,
@@ -30,6 +30,8 @@ import {
 import { IconType} from 'react-icons';
 import { SearchIcon,ChevronDownIcon } from '@chakra-ui/icons'
 import { ReactText } from 'react';
+import { id } from 'ethers/lib/utils';
+import { link } from 'fs';
 
 interface LinkItemProps {
   name: string;
@@ -71,38 +73,24 @@ interface SidebarProps extends BoxProps {
 }
 
 const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
-  const [LinkItems,setColor] = useState([
-    { name: 'Overview', icon: FiHome ,path:'/overview',color:'#f9f1eb',id:1},
-    { name: 'My Assets', icon: FiBriefcase,path:'/asset',color:'white',id:2},
-    { name: 'Exchange', icon: FiBriefcase,path:'/asset',color:'white',id:3},
-    { name: 'Earn', icon: FiTrendingUp ,path:'/asset',color:'white',id:4},
-    { name: 'NFT', icon: FiCompass ,path:'/asset',color:'white',id:5},
-    { name: 'Activity', icon: FiStar ,path:'/activity',color:'white',id:6},
-    { name: 'Settings', icon: FiSettings ,path:'/asset',color:'white',id:7},
-  ]);
-  
-  const handleClick = (id) => {
-    const newState = LinkItems.map(obj => {
-      // 👇️ if id equals 2, update country property
-      if (obj.id === id) {
-        return {...obj, color: '#f9f1eb'};
-      } 
-  
-      // 👇️ otherwise return object as is
-      return obj;
-    });
-    const newState2 = newState.map(obj2 => {
-      // 👇️ if id equals 2, update country property
-      if (obj2.id !== id && obj2.color === '#f9f1eb') {
-        return {...obj2, color: 'white'};
-      } 
-  
-      // 👇️ otherwise return object as is
-      return obj2;
-    });
-  
-    setColor(newState2);
-  };
+  var path = window.location.pathname;
+  var page = path.split("/").pop();
+  const LinkItems = [
+    { name: 'Overview', icon: FiHome ,path:'/overview',id:1},
+    { name: 'My Assets', icon: FiBriefcase,path:'/asset',id:2},
+    { name: 'Exchange', icon: FiBriefcase,path:'/asset',id:3},
+    { name: 'Earn', icon: FiTrendingUp ,path:'/asset',id:4},
+    { name: 'NFT', icon: FiCompass ,path:'/asset',id:5},
+    { name: 'Activity', icon: FiStar ,path:'/activity',id:6},
+    { name: 'Settings', icon: FiSettings ,path:'/asset',id:7},
+  ];
+  const [selectedMenu,setSelectedMenu] = useState(1);
+  useEffect(()=>{
+    setSelectedMenu(1);
+  },[]);
+  useEffect(()=>{
+    setSelectedMenu(selectedMenu);
+  },[selectedMenu]);
   return (
     <Box
       bg={useColorModeValue('white', 'gray.900')}
@@ -126,7 +114,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
       <WalletApp />
     </Flex>
       {LinkItems.map((link) => (
-        <NavItem key={link.name} icon={link.icon} path= {link.path} fontSize="12px" bgColor={link.color} onClick={()=>handleClick(link.id)}>
+        <NavItem key={link.id} icon={link.icon} path= {link.path} fontSize="12px" onClick={()=> setSelectedMenu(link.id)} bgColor={selectedMenu === link.id ? '#f9f1eb': '#ffffff'} >
           {link.name}
         </NavItem>
       ))}

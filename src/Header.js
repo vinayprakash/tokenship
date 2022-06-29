@@ -13,8 +13,7 @@ function Headers() {
   }
   var path = window.location.pathname;
   var page = path.split("/").pop();
-  console.log( page );
-  const header = headerMap[page];
+  const header = headerMap[page] || 'Overview';
     return(
       <div className="App" flexBasis={"fit-content"} style={{'width':'100%'}}>
 <Box  width={"100%"} bgColor="gray.100">
