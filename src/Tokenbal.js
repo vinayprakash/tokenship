@@ -11,31 +11,45 @@ function TokBal() {
   const [filteredList,setFilteredList]= useState([]);
   const [CurrentWorth, setCurrentWorth] = useState();
   const [Qty, setQty] = useState();
+  const [accountAddress, setAccountAddress] = useState();
+  const [url, setUrl] = useState("");
   // const walAddress = "0xfC43f5F9dd45258b3AFf31Bdbe6561D97e8B71de"; // ethereum data address
-
-  var walletaddress = sessionStorage.getItem("walletaddress");
 // const walletaddress = "0xfC43f5F9dd45258b3AFf31Bdbe6561D97e8B71de";
-const chains =[ "ethereum", "bsc", "matic","celo", "avalanche" ,"xinfin", "zilliqa", "solana", "fantom", "bsc-testnet","matic-testnet","rinkeby-testnet"]
+// const chains =[ "ethereum", "bsc", "matic","celo", "avalanche" ,"xinfin", "zilliqa", "solana", "fantom", "bsc-testnet","matic-testnet","rinkeby-testnet"]
 
 var chainName = "bsc"
-const URL = `https://api.unmarshal.com/v1/bsc/address/${walletaddress}/assets?auth_key=DmBQDZcYPmaGes4KPq2G385JFVEGlDZz4IinQ4b4`;
-
 const [q, setQ] = useState("");
 
   useEffect(() => {
-    fetchData();
+    const timer = setTimeout(() => {
+    var walletaddress = sessionStorage.getItem("walletaddress");
+    setAccountAddress(walletaddress);
+    let url = "";
+    if(walletaddress){
+      url = `https://api.unmarshal.com/v1/bsc/address/${walletaddress}/assets?auth_key=DmBQDZcYPmaGes4KPq2G385JFVEGlDZz4IinQ4b4`;
+      setUrl(url);
+    }
+    }, 1000);
+    return () => clearTimeout(timer);
   }, []);
 
+  useEffect(() => {
+    if(url){
+      fetchData();
+    }
+  }, [url]);
+
   const fetchData =  () => {
-       fetch(URL)
+    console.log(url);
+       fetch(url)
       .then((res) =>
         res.json())
       .then((response) => {
-        console.log(response);
+        //console.log(response);
         setData(response);
-        console.log(response);
+        //console.log(response);
         var CurrentWorth = [];
-        response.map(item => {
+        response?.map(item => {
           const num = `${(item.quote_rate * ethers.utils.formatEther(item.balance))}`
           CurrentWorth.push(Number(num))
           var result = CurrentWorth.reduce((x, y) => x + y);
