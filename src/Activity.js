@@ -6,7 +6,6 @@ import {Table, Thead, Tbody, Tfoot, Tr, Th, Td, TableContainer,Flex,Button,Link,
 import { ExternalLinkIcon,ArrowDownIcon,ArrowUpIcon,RepeatIcon,} from '@chakra-ui/icons';
 import {FaSort} from 'react-icons/fa'
 
-
 function ActivityData() {
     const [data, setData] = useState([])
     const [filterData, setFilterData] = useState([])
@@ -35,13 +34,15 @@ function ActivityData() {
     useEffect(() => {
       let URL = "";
         if(walletaddressnew && chainnamenew){
-          URL = `https://api.unmarshal.com/v1/${chainnamenew}/address/${walletaddressnew}/assets?auth_key=wKV8eggPIV465Yu6isLDR7HtpO66ysQt9iCpo40D`;
+          URL = `https://api.unmarshal.com/v2/${chainnamenew}/address/${walletaddressnew}/transactions?&page=${pagenum}&pageSize=5&auth_key=wKV8eggPIV465Yu6isLDR7HtpO66ysQt9iCpo40D`;
           setUrl(URL);
         }
     }, [chainnamenew, walletaddressnew]);
 
     useEffect(() => {
-    fetchData()
+      if(URL){
+        fetchData()
+      }
     },[URL]);
  
     useEffect(() => {
@@ -50,7 +51,7 @@ function ActivityData() {
     
     useEffect(() => {
     sort();
-    }, [sortkey]);  
+    },[sortkey]);  
 
     useEffect(() =>{
     cleanData();
@@ -96,13 +97,15 @@ function ActivityData() {
     } 
   }
     const fetchData = () => {
-      console.log(URL)
-      fetch(URL)
-    .then((res) => res.json())
-    .then((response) => {
-    const newData = response.transactions;    
-    setData([...data, ...newData]);
-    })
+      if(URL){
+        fetch(URL)
+        .then((res) => res.json())
+        .then((response) => {
+        const newData = response.transactions;    
+        setData([...data, ...newData]);
+        })
+      }
+      
     }
 
     const sort=()=>{
