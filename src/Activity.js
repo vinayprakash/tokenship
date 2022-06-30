@@ -32,10 +32,10 @@ function ActivityData() {
     }, []);
 
     useEffect(() => {
-      let URL = "";
+        let URL = "";
         if(walletaddressnew && chainnamenew){
-          URL = `https://api.unmarshal.com/v2/${chainnamenew}/address/${walletaddressnew}/transactions?&page=${pagenum}&pageSize=5&auth_key=wKV8eggPIV465Yu6isLDR7HtpO66ysQt9iCpo40D`;
-          setUrl(URL);
+        URL = `https://api.unmarshal.com/v2/${chainnamenew}/address/${walletaddressnew}/transactions?&page=${pagenum}&pageSize=5&auth_key=wKV8eggPIV465Yu6isLDR7HtpO66ysQt9iCpo40D`;
+        setUrl(URL);
         }
     }, [chainnamenew, walletaddressnew]);
 
@@ -78,8 +78,9 @@ function ActivityData() {
         senttoken_logo: item.sent? item.sent[0]?.logo_url:"",
         // receivedQuote: item.received?item.received[0]?.quote?item.received[0]?.quote:"":"",
         // sentQuote: item.sent?item.sent[0]?.quote?item.sent[0]?.quote:"":"",
-        quote : item?.type==='receive'?   item?.received[0]?.quote  :item?.type==='send'?item.sent[0]?.quote :item?.type==='swap'?item.sent[0]?.quote : '',
-        link : `https://bscscan.com/tx/${item?.id}`,
+        quote : item?.type==='receive'? item?.received[0]?.quote  :item?.type==='send'?item.sent[0]?.quote :item?.type==='swap'?item.sent[0]?.quote : '',
+        link : chainnamenew ==="bsc" ? `https://bscscan.com/tx/${item?.id}`: chainnamenew ==="matic" ? `https://polygonscan.com/tx/${item?.id}` : chainnamenew ==="avalanche" ? `https://avascan.info/blockchain/c/tx/${item?.id}` : chainnamenew ==="ethereum" ?
+        `https://etherscan.io/tx/${item?.id}` :chainnamenew ==="rinkeby-testnet" ? `https://rinkeby.etherscan.io/tx/${item?.id}` : console.log("No supported chain"),
         sentvalue : item.value,
         receivedvalue : item.received? item.received[0]?.value:"",
     }
@@ -98,6 +99,7 @@ function ActivityData() {
   }
     const fetchData = () => {
       if(URL){
+        console.log(URL)
         fetch(URL)
         .then((res) => res.json())
         .then((response) => {
@@ -225,8 +227,8 @@ function ActivityData() {
         </Flex>
         </Td> :<Td></Td>
         }
-        <Td>{item.quote? item.quote : 0 }</Td>
-        <Td><Link href={item.link} isExternal><Icon width= '1.2em' height= '1.2em'as={ExternalLinkIcon} color="red.500"/></Link></Td>
+        <Td>{item.quote? item.quote : 0 }</Td>   
+        <Td> <Link href={item.link} isExternal><Icon width= '1.2em' height= '1.2em'as={ExternalLinkIcon} color="red.500"/></Link></Td>
         </Tr>
         ))
         }
