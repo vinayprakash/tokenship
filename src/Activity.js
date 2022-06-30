@@ -13,13 +13,36 @@ function ActivityData() {
     const [sortkey, setSortkey]=useState('');
     const [pagenum, setPageNum] = useState(1);
     const [barfilter, setbarfilter] = useState('all');
-    
-     var walletaddress = sessionStorage.getItem("walletaddress");
-    const URL = `https://api.unmarshal.com/v2/bsc/address/${walletaddress}/transactions?&page=${pagenum}&pageSize=5&auth_key=wKV8eggPIV465Yu6isLDR7HtpO66ysQt9iCpo40D`;
- 
+    const [chainnamenew,setChainName]=useState();
+    const [walletaddressnew,setWalletAddress]=useState();
+    const [URL,setUrl] = useState();
+
+    useEffect(() => {
+      const timer = setTimeout(() => {
+      var walletaddress = sessionStorage.getItem("walletaddress");
+      var chainname = sessionStorage.getItem("activeChain");
+      setChainName(chainname);
+      setWalletAddress(walletaddress);
+      let URL = "";
+      if(walletaddress && chainname){
+        URL = `https://api.unmarshal.com/v2/${chainname}/address/${walletaddress}/transactions?&page=${pagenum}&pageSize=5&auth_key=wKV8eggPIV465Yu6isLDR7HtpO66ysQt9iCpo40D`;
+        setUrl(URL);
+      }
+      }, 1000);
+      return () => clearTimeout(timer);
+    }, []);
+
+    useEffect(() => {
+      let URL = "";
+        if(walletaddressnew && chainnamenew){
+          URL = `https://api.unmarshal.com/v1/${chainnamenew}/address/${walletaddressnew}/assets?auth_key=wKV8eggPIV465Yu6isLDR7HtpO66ysQt9iCpo40D`;
+          setUrl(URL);
+        }
+    }, [chainnamenew, walletaddressnew]);
+
     useEffect(() => {
     fetchData()
-    },[]);
+    },[URL]);
  
     useEffect(() => {
     fetchData()
@@ -73,6 +96,7 @@ function ActivityData() {
     } 
   }
     const fetchData = () => {
+      console.log(URL)
       fetch(URL)
     .then((res) => res.json())
     .then((response) => {
@@ -206,7 +230,7 @@ function ActivityData() {
         </Tbody>
         </Table>
         </TableContainer>
-        </Flex><Button onClick={incrementpagenum}> Load More </Button></Flex>
+        </Flex>{filterData.length > 6 ? <Button onClick={incrementpagenum}> Load More </Button> : ""}</Flex>
         </Flex>
         </Flex>
         </App>
