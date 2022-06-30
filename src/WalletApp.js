@@ -96,14 +96,14 @@ export default function App() {
     const [connButtonText, setConnButtonText] = useState('Connect to Wallet');
     const [chainId, setChainID] = useState(null);
     const CHAINIDS = {
-        1: "Ethereum Main Network",
+        1: "Ethereum",
         3: "Ropsten Test Network",
-        4: "Rinkeby Test Network",
+        4: "Rinkeby-testnet",
         5: "Goerli Test Network",
         42: "Kovan Test Network",
-        56: "bsc",
-        43114: "avalanche",
-        137: "matic"
+        56: "BSC",
+        43114: "Avalanche",
+        137: "Matic"
     };
     const connectWalletHandler = () => {
         if (window.ethereum) {
