@@ -11,7 +11,8 @@ function TokBal() {
   const [filteredList,setFilteredList]= useState([]);
   const [CurrentWorth, setCurrentWorth] = useState();
   const [Qty, setQty] = useState();
-  const [chainName, setChainName] = useState(); 
+  const [chainnamenew, setChainName] = useState(); 
+  const [walletaddressnew,setWalletAddress]=useState();
   const [URL, setUrl] = useState("");
   // const chains =[ "ethereum", "bsc", "matic","celo", "avalanche" ,"xinfin", "zilliqa", "solana", "fantom", "bsc-testnet","matic-testnet","rinkeby-testnet"]
   const [q, setQ] = useState("");
@@ -19,11 +20,12 @@ function TokBal() {
   useEffect(() => {
     const timer = setTimeout(() => {
     var walletaddress = sessionStorage.getItem("walletaddress");
-    var activeChain = sessionStorage.getItem("activeChain");
-    setChainName(activeChain);
+    var chainname = sessionStorage.getItem("activeChain");
+    setChainName(chainname);
+    setWalletAddress(walletaddress)
     let URL = "";
-    if(walletaddress && activeChain){
-       URL = `https://api.unmarshal.com/v1/${activeChain}/address/${walletaddress}/assets?auth_key=wKV8eggPIV465Yu6isLDR7HtpO66ysQt9iCpo40D`;
+    if(walletaddress && chainname){
+       URL = `https://api.unmarshal.com/v1/${chainname}/address/${walletaddress}/assets?auth_key=wKV8eggPIV465Yu6isLDR7HtpO66ysQt9iCpo40D`;
       setUrl(URL);
     }
     }, 1000);
@@ -31,12 +33,21 @@ function TokBal() {
   }, []);
 
   useEffect(() => {
+    let URL = "";
+      if(walletaddressnew && chainnamenew){
+        URL = `https://api.unmarshal.com/v1/${chainnamenew}/address/${walletaddressnew}/assets?auth_key=wKV8eggPIV465Yu6isLDR7HtpO66ysQt9iCpo40D`;
+        setUrl(URL);
+      }
+  }, [chainnamenew, walletaddressnew]);
+
+  useEffect(() => {
     if(URL){
       fetchData();
     }
-  }, [URL , chainName]);
+  }, [URL]);
 
   const fetchData =  () => {
+      console.log(URL);
        fetch(URL)
       .then((res) =>
         res.json())
@@ -129,7 +140,7 @@ function percentage(quoteRate, quoteRate24H) {
                 <Heading fontSize='13px' fontWeight='light'>Qty: {Number(ethers.utils.formatEther(item.balance)).toFixed(4)}</Heading>
               </div>
               <div>
-                <Heading fontSize='13px' fontWeight='light' >{chainName}</Heading>
+                <Heading fontSize='13px' fontWeight='light' >{chainnamenew}</Heading>
               </div>
               </Flex>
            </Flex>
