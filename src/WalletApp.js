@@ -56,22 +56,31 @@ const networks = {
             symbol: "BNB",
             decimals: 18
         },
-        rpcUrls: [
-            "https://bsc-dataseed1.binance.org",
-            "https://bsc-dataseed2.binance.org",
-            "https://bsc-dataseed3.binance.org",
-            "https://bsc-dataseed4.binance.org",
-            "https://bsc-dataseed1.defibit.io",
-            "https://bsc-dataseed2.defibit.io",
-            "https://bsc-dataseed3.defibit.io",
-            "https://bsc-dataseed4.defibit.io",
-            "https://bsc-dataseed1.ninicoin.io",
-            "https://bsc-dataseed2.ninicoin.io",
-            "https://bsc-dataseed3.ninicoin.io",
-            "https://bsc-dataseed4.ninicoin.io",
-            "wss://bsc-ws-node.nariox.org"
-        ],
+        rpcUrls: ["https://bsc-dataseed.binance.org"],
         blockExplorerUrls: ["https://bscscan.com"]
+    },
+    avalanche: {
+        chainId: `0x${Number(43114).toString(16)}`,
+        chainName: "Avalanche",
+        nativeCurrency: {
+            name: "AVAX",
+            symbol: "AVAX",
+            decimals: 18
+        },
+        rpcUrls: ["https://api.avax.network/ext/bc/C/rpc"],
+        blockExplorerUrls: ["https://snowtrace.io"]
+    },
+    ethereum: {
+        chainId: `0x${Number(1).toString(16)}`,
+        chainName: "Ethereum Mainnet",
+        nativeCurrency: {
+            name: "ETH",
+            symbol: "ETH",
+            decimals: 18
+        },
+        rpcUrls: ["https://rpc.ankr.com/eth"],
+        //rpcUrls: ["https://api.mycryptoapi.com/eth"],
+        blockExplorerUrls: ["https://etherscan.io"]
     }
 };
 const changeNetwork = async (networkName, setError) => {
@@ -96,7 +105,7 @@ export default function App() {
     const [connButtonText, setConnButtonText] = useState('Connect to Wallet');
     const [chainId, setChainID] = useState(null);
     const CHAINIDS = {
-        1: "Ethereum Main Network",
+        1: "ethereum",
         3: "Ropsten Test Network",
         4: "Rinkeby Test Network",
         5: "Goerli Test Network",
@@ -178,6 +187,10 @@ export default function App() {
                             <Text fontSize='xs'> Polygon </Text> </MenuItem>
                         <MenuItem onClick={() => handleNetworkSwitch("bsc")}>
                             <Text fontSize='xs'> BSC </Text> </MenuItem>
+                        <MenuItem onClick={() => handleNetworkSwitch("avalanche")}>
+                            <Text fontSize='xs'> Avalanche </Text> </MenuItem>
+                        <MenuItem onClick={() => handleNetworkSwitch("ethereum")}>
+                            <Text fontSize='xs'> Ethereum </Text> </MenuItem>
                     </MenuList>
                 </Menu>
             </Flex>
