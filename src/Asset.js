@@ -147,7 +147,7 @@ function AssetData() {
                 fontStyle=''> All Asset value</Text>
               </Flex>
               <Flex>
-                <Text fontSize={'larger'} fontWeight='bold'> ${CurrentWorth?.toFixed(2)} </Text>
+                <Text fontSize={'larger'} fontWeight='bold'> ${CurrentWorth?CurrentWorth?.toFixed(2):0} </Text>
               </Flex>
             </Box >
           </Flex>
@@ -193,7 +193,7 @@ function AssetData() {
                     <Text fontSize={'10px'} fontWeight='normal' fontFamily={'body'}> Current Worth</Text>
                   </Flex>
                   <Flex>
-                    <Text fontSize={'larger'} fontWeight='bold'> ${CurrentWorth?.toFixed(2)} </Text>
+                    <Text fontSize={'larger'} fontWeight='bold'> ${CurrentWorth? CurrentWorth?.toFixed(2):0} </Text>
                   </Flex>
                 </Box >
               </Flex>
@@ -213,7 +213,7 @@ function AssetData() {
                     <Text fontSize={'10px'} fontWeight='normal' fontFamily={'body'}> Invested </Text>
                   </Flex>
                   <Flex>
-                    <Text fontSize={'larger'} fontWeight='bold'> ${CurrentWorth?.toFixed(2)} </Text>
+                    <Text fontSize={'larger'} fontWeight='bold'> ${CurrentWorth? CurrentWorth?.toFixed(2):0} </Text>
                   </Flex>
                 </Box >
               </Flex>
